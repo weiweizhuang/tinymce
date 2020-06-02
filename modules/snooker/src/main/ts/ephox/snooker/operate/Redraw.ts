@@ -23,7 +23,8 @@ const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<
   const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
     const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
       const tb = Element.fromTag(sectionName, Traverse.owner(table).dom());
-      Insert.append(table, tb);
+      const insert = sectionName === 'thead' ? Insert.prepend : Insert.append;
+      insert(table, tb);
       return tb;
     });
 
