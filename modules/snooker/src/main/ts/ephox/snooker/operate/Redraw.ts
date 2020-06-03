@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse, SelectorFilter } from '@ephox/sugar';
 import { Detail, DetailNew, RowDataNew } from '../api/Structs';
 import { Node as DomNode } from '@ephox/dom-globals';
@@ -20,11 +20,9 @@ const render = function <T extends DetailNew> (table: Element, grid: RowDataNew<
   const newRows: Element[] = [];
   const newCells: Element[] = [];
 
-  const lastColgroupOrCaption = Arr.last(SelectorFilter.children(table, 'colgroup')).or(SelectorFind.child(table, 'caption'));
-
-  const insertThead = (section: Element<any>) => lastColgroupOrCaption.fold(
-    () => Insert.prepend(table, section), 
-    (c) => Insert.after(c, section)
+  const insertThead = Arr.last(SelectorFilter.children(table, 'caption,colgroup')).fold(
+    () => Fun.curry(Insert.prepend, table),
+    (c) => Fun.curry(Insert.after, c)
   );
 
   const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
